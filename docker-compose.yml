@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  microservice1:
+    build:
+      context: ./microservice1
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db1:5432/IHW
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123456
+    depends_on:
+      - db1
+
+  microservice2:
+    build:
+      context: ./microservice2
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db2:5432/Orders
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123456
+    depends_on:
+      - db2
+
+  db1:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: IHW
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./db-migrations/microservice1:/docker-entrypoint-initdb.d
+    ports:
+      - "5432"
+
+  db2:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: Orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - ./db-migrations/microservice2:/docker-entrypoint-initdb.d
+    ports:
+      - "5432"

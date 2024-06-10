@@ -1,0 +1,4 @@
+CREATE TABLE station (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    station VARCHAR(50) NOT NULL
+);
